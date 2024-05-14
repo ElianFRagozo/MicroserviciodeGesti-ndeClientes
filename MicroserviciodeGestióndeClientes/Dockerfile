@@ -8,10 +8,10 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["MicroserviciodeGestióndeClientes/MicroserviciodeGestióndeClientes.csproj", "MicroserviciodeGestióndeClientes/"]
-RUN dotnet restore "./MicroserviciodeGestióndeClientes/MicroserviciodeGestióndeClientes.csproj"
+COPY ["MicroserviciodeGestióndeClientes.csproj", "."]
+RUN dotnet restore "./MicroserviciodeGestióndeClientes.csproj"
 COPY . .
-WORKDIR "/src/MicroserviciodeGestióndeClientes"
+WORKDIR "/src/."
 RUN dotnet build "./MicroserviciodeGestióndeClientes.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

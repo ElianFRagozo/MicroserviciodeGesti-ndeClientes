@@ -1,10 +1,9 @@
-using MicroserviciodeGesti髇deClientes.Data;
+using MicroserviciodeGesti贸ndeClientes.Data;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +13,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 
 builder.Services.AddSingleton<IAuthorizationFilter, JwtAuthorizationFilter>();
 
@@ -38,6 +36,17 @@ builder.Services.AddDbContext<ClienteDbContext>(options =>
            .EnableSensitiveDataLogging()
            .EnableDetailedErrors());
 
+// Configuraci贸n CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", builder =>
+    {
+        builder.WithOrigins("http://localhost:3000") // Reemplaza con la URL de tu aplicaci贸n de React
+               .AllowAnyHeader()
+               .AllowAnyMethod();
+    });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -48,6 +57,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+// Habilitar CORS en la aplicaci贸n
+app.UseCors("AllowSpecificOrigin");
 
 app.UseAuthorization();
 
